@@ -1,47 +1,34 @@
 #! /usr/local/bin/node
 
-var _ = require('lodash')
-;
+require('daemon')();
 
-var PixelStrip = require("../lib/pixel-strip"),
-    Color = require('../lib/color')
-;
+// Config //
+var config = require('../config'),
+    rabbit_url = config.rabbit.url,
+    exchange_name = config.rabbit.exchange;
 
 
-var beacon = (function () {
-  var stripLength = 240;
-  var strip = new PixelStrip(stripLength);
-  
-  var color = Color.fromRGB(0, 0, 255);
-  var highlight = Color.fromRGB(0, 0, 255);
+// Logging //
+var winston = require('winston');
+var curentFilename = __filename.split("/").pop(),
+    logFile = __dirname + "/../" + config.logs.directory + currentFilename + ".log";
 
-  var position = 0;
-  var tickLength = 50;
+winston.add(winston.transports.File, { filename: logFile, timestamp: true });
+winston.info("Logging on " + logFile);
+winston.info("Connecting to MQ at " + rabbit_url + " on exchange " + exchange_name);
 
-  function tick() {
-    strip.setColor(position, color);
-    position = (position + 1) % stripLength; 
-    strip.setColor(position, highlight);
-    strip.render();
+
+// Setup beacon //
+var beacon = require("../lib/beacon");
+
+function messageReceived(message) { 
+  if(message.passing) {
+    beacon.triggerSuccess();
+  } else {
+    beacon.triggerFailure();
   }
-
-  setInterval(tick, tickLength);
-
-  return {
-    triggerSuccess: function () {
-      color = new Color("hsl(120,100%,10%);");
-      highlight = new Color("hsl(120,100%,50%);");
-    },
-
-    triggerFailure: function () {
-      color = new Color("hsl(0,100%,10%);");
-      highlight = new Color("hsl(0,100%,50%);");
-    }
-  };
-})();
-
+}
 
 beacon.triggerFailure();
 
-setTimeout(function () { setInterval(beacon.triggerSuccess, 2000); }, 1000);
-setInterval(beacon.triggerFailure, 2000);
+var listener = new TestStatusListener(rabbit_url, exchange_name, messageReceived);

@@ -1,0 +1,17 @@
+{
+  "logs": {
+    "directory": "logs/",
+    "filename": "check-status.log"
+  },
+  "jenkins": {
+    "url": "http://squid.nu/view/Acceptance%20Torch/"
+  },
+  "rabbit": {
+    "url": "brenda.local",
+    "exchange": "acceptance_torch_status"
+  },
+  "pins": {
+    "success": 7,
+    "transmit": 19
+  }
+}
