@@ -1,3 +1,5 @@
+#! /usr/local/bin/node
+
 var osc = require('osc-min'),
     udp = require('udp'),
     dgram = require('dgram');
@@ -17,5 +19,5 @@ server.on("message", function (message, rinfo) {
   }
 });
 
-server.bind(8000, "192.168.1.107");
+server.bind(8000);
 
