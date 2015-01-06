@@ -1,6 +1,6 @@
 #! /usr/local/bin/node
 
-require('daemon')();
+//require('daemon')();
 
 // Config //
 var config = require('../config'),
@@ -10,7 +10,7 @@ var config = require('../config'),
 
 // Logging //
 var winston = require('winston');
-var curentFilename = __filename.split("/").pop(),
+var currentFilename = __filename.split("/").pop(),
     logFile = __dirname + "/../" + config.logs.directory + currentFilename + ".log";
 
 winston.add(winston.transports.File, { filename: logFile, timestamp: true });
@@ -19,7 +19,8 @@ winston.info("Connecting to MQ at " + rabbit_url + " on exchange " + exchange_na
 
 
 // Setup beacon //
-var beacon = require("../lib/beacon");
+var beacon = require("../lib/beacon"),
+    TestStatusListener = require("../lib/test_status_listener");
 
 function messageReceived(message) { 
   if(message.passing) {

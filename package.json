@@ -9,13 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqp": "^0.2.0",
     "color": "^0.7.3",
+    "daemon": "^1.1.0",
     "lodash": "^2.4.1",
     "osc-min": "^0.2.0",
     "osc.io": "0.0.3",
     "rpi-ws281x-native": "^0.1.2",
     "socket.io": "^1.2.1",
     "tinycolor": "0.0.1",
-    "udp": "^1.0.0"
+    "udp": "^1.0.0",
+    "winston": "^0.8.3"
   }
 }
